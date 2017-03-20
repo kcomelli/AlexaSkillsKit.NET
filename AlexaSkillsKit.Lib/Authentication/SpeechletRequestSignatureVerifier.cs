@@ -100,8 +100,8 @@ namespace AlexaSkillsKit.Authentication
             // so restrict host to an Alexa controlled subdomain/path
             if (!VerifyCertificateUrl(certChainUrl)) return null;
 
-            var webClient = new WebClient();
-            var content = webClient.DownloadString(certChainUrl);
+            var httpClient = new HttpClient();
+            var content = httpClient.GetStringAsync(certChainUrl).Result;
 
             var pemReader = new Org.BouncyCastle.OpenSsl.PemReader(new StringReader(content));
             var cert = (X509Certificate)pemReader.ReadObject();
