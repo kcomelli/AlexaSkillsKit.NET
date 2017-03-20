@@ -178,9 +178,9 @@ namespace AlexaSkillsKit.Authentication
         /// </summary>
         private static bool CheckCertSubjectNames(X509Certificate cert) {
             bool found = false;
-            ArrayList subjectNamesList = (ArrayList)cert.GetSubjectAlternativeNames();
+            var subjectNamesList = (IList)cert.GetSubjectAlternativeNames();
             for (int i=0; i < subjectNamesList.Count; i++) {
-                ArrayList subjectNames = (ArrayList)subjectNamesList[i];
+                var subjectNames = (IList)subjectNamesList[i];
                 for (int j = 0; j < subjectNames.Count; j++) {
                     if (subjectNames[j] is String && subjectNames[j].Equals(Sdk.ECHO_API_DOMAIN_NAME)) {
                         found = true;
