@@ -39,7 +39,7 @@ namespace AlexaSkillsKit.Authentication
             return
                 certChainUri.Host.Equals(Sdk.SIGNATURE_CERT_URL_HOST, StringComparison.OrdinalIgnoreCase) &&
                 certChainUri.PathAndQuery.StartsWith(Sdk.SIGNATURE_CERT_URL_PATH) &&
-                certChainUri.Scheme == Uri.UriSchemeHttps &&
+                certChainUri.Scheme.ToLowerInvariant() == "https" &&
                 certChainUri.Port == 443;
         }
 
