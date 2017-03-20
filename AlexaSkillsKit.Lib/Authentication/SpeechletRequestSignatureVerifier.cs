@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Caching;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,11 +18,8 @@ namespace AlexaSkillsKit.Authentication
     public class SpeechletRequestSignatureVerifier
     {
         private static Func<string, string> _getCertCacheKey = (string url) => string.Format("{0}_{1}", Sdk.SIGNATURE_CERT_URL_REQUEST_HEADER, url);
-
-        private static CacheItemPolicy _policy = new CacheItemPolicy {
-            Priority = CacheItemPriority.Default,
-            AbsoluteExpiration = DateTimeOffset.UtcNow.AddHours(24)
-        };
+        private static Dictionary<string, X509Certificate> _certCache = new Dictionary<string,X509Certificate>();
+        private static DateTimeOffset _certCacheAbsoluteExpiration = DateTimeOffset.UtcNow.AddHours(24);
 
 
         /// <summary>
@@ -54,8 +50,7 @@ namespace AlexaSkillsKit.Authentication
         public static bool VerifyRequestSignature(
             byte[] serializedSpeechletRequest, string expectedSignature, string certChainUrl) {
 
-            string certCacheKey = _getCertCacheKey(certChainUrl);
-            X509Certificate cert = MemoryCache.Default.Get(certCacheKey) as X509Certificate;
+            X509Certificate cert = GetCachedCertificate(certChainUrl);
             if (cert == null ||
                 !CheckRequestSignature(serializedSpeechletRequest, expectedSignature, cert)) {
 
@@ -66,7 +61,7 @@ namespace AlexaSkillsKit.Authentication
                 cert = RetrieveAndVerifyCertificate(certChainUrl);
                 if (cert == null) return false;
 
-                MemoryCache.Default.Set(certCacheKey, cert, _policy);
+                SetCachedCertificate(certChainUrl, cert);
             }
 
             return CheckRequestSignature(serializedSpeechletRequest, expectedSignature, cert);
@@ -79,8 +74,7 @@ namespace AlexaSkillsKit.Authentication
         public async static Task<bool> VerifyRequestSignatureAsync(
             byte[] serializedSpeechletRequest, string expectedSignature, string certChainUrl) {
 
-            string certCacheKey = _getCertCacheKey(certChainUrl);
-            X509Certificate cert = MemoryCache.Default.Get(certCacheKey) as X509Certificate;
+            X509Certificate cert = GetCachedCertificate(certChainUrl);
             if (cert == null ||
                 !CheckRequestSignature(serializedSpeechletRequest, expectedSignature, cert)) {
 
@@ -91,7 +85,7 @@ namespace AlexaSkillsKit.Authentication
                 cert = await RetrieveAndVerifyCertificateAsync(certChainUrl);
                 if (cert == null) return false;
 
-                MemoryCache.Default.Set(certCacheKey, cert, _policy);
+                SetCachedCertificate(certChainUrl, cert);
             }
 
             return CheckRequestSignature(serializedSpeechletRequest, expectedSignature, cert);
@@ -196,6 +190,26 @@ namespace AlexaSkillsKit.Authentication
             }
 
             return found;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static X509Certificate GetCachedCertificate(string url) {
+            var key = _getCertCacheKey(url);
+            if (_certCacheAbsoluteExpiration > DateTimeOffset.UtcNow) {
+                _certCache[key] = null;
+            }
+
+            return _certCache[key];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static void SetCachedCertificate(string url, X509Certificate certificate) {
+            var key = _getCertCacheKey(url);
+            _certCache[key] = certificate;
         }
     }
 }
