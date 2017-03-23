@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
-    <Version>1.5.1</Version>
+    <Version>1.6.0</Version>
     <Authors>Stefan Negritoiu (FreeBusy)</Authors>
     <Owners>Stefan Negritoiu (FreeBusy)</Owners>
     <Product>AlexaSkillsKit</Product>
@@ -22,6 +22,7 @@
 1.4.0: Ability to override request validation policy and support for SSML output speech type
 1.5.0: Fully implement certificate verification requirement and support for Standard cards
 1.5.1: bug fix in certificate verification
+1.6.0: migration to netstandard1.1 (supports .net 4.5+ and .net core 1.0+)
     </PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
