@@ -49,7 +49,7 @@ namespace AlexaSkillsKit.Speechlet
 
             SpeechletRequestEnvelope alexaRequest = null;
             try {
-                var alexaContent = UTF8Encoding.UTF8.GetString(alexaBytes);
+                var alexaContent = UTF8Encoding.UTF8.GetString(alexaBytes, 0, alexaBytes.Length);
                 alexaRequest = SpeechletRequestEnvelope.FromJson(alexaContent);
             }
             catch (Newtonsoft.Json.JsonReaderException) {
