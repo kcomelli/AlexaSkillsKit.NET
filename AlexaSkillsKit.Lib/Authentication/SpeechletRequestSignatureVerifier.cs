@@ -197,7 +197,7 @@ namespace AlexaSkillsKit.Authentication
         /// </summary>
         private static X509Certificate GetCachedCertificate(string url) {
             var key = _getCertCacheKey(url);
-            if (_certCacheAbsoluteExpiration > DateTimeOffset.UtcNow) {
+            if (_certCacheAbsoluteExpiration < DateTimeOffset.UtcNow) {
                 _certCache[key] = null;
             }
 
