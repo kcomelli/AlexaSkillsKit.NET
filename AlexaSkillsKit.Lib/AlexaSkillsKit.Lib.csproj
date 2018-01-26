@@ -28,12 +28,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.1'">
     <DefineConstants>$(DefineConstants);NETCORE;NETSTD11</DefineConstants>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <AssetTargetFallback>$(AssetTargetFallback);dnxcore50</AssetTargetFallback>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>$(DefineConstants);NETCORE;NETSTD20</DefineConstants>
-    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <AssetTargetFallback>$(AssetTargetFallback);dnxcore50</AssetTargetFallback>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
