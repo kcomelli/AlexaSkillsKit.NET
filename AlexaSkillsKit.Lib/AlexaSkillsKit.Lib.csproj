@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.1</TargetFramework>
-    <Version>1.6.0</Version>
+    <TargetFrameworks>netstandard2.0;netstandard1.1;net45</TargetFrameworks>
+    <Version>1.7.0</Version>
     <Authors>Stefan Negritoiu (FreeBusy)</Authors>
     <Owners>Stefan Negritoiu (FreeBusy)</Owners>
     <Product>AlexaSkillsKit</Product>
     <PackageId>AlexaSkillsKit.Net</PackageId>
     <Title>AlexaSkillsKit.Net</Title>
-    <AssemblyVersion>1.5.0</AssemblyVersion>
-    <FileVersion>1.5.0</FileVersion>
+    <AssemblyVersion>1.7.0</AssemblyVersion>
+    <FileVersion>1.7.0</FileVersion>
     <Description>
 .NET library that simplifies Alexa skills development; same object model as Amazon's AlexaSkillsKit for Java
     </Description>
@@ -22,13 +22,34 @@
 1.4.0: Ability to override request validation policy and support for SSML output speech type
 1.5.0: Fully implement certificate verification requirement and support for Standard cards
 1.5.1: bug fix in certificate verification
-1.6.0: migration to netstandard1.1 (supports .net 4.5+ and .net core 1.0+)
+1.7.0: migration to netstandard1.1 (supports .net 4.5+, .net core 1.x and .net core 2.x)
     </PackageReleaseNotes>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.1'">
+    <DefineConstants>$(DefineConstants);NETCORE;NETSTD11</DefineConstants>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <AssetTargetFallback>$(AssetTargetFallback);dnxcore50</AssetTargetFallback>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>$(DefineConstants);NETCORE;NETSTD20</DefineConstants>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
+    <AssetTargetFallback>$(AssetTargetFallback);dnxcore50</AssetTargetFallback>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+    <DefineConstants>NET45</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+    <PackageReference Include="System.Collections" Version="4.3.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.1" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.2" />
-    <PackageReference Include="System.Collections" Version="4.3.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.1" />
+
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 </Project>
